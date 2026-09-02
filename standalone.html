@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VELOUR Store — Figma E-Commerce</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- React 18 & Babel for instant runtime execution -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --color-primary: #111827;
+      --color-primary-hover: #1f2937;
+      --color-primary-light: #f3f4f6;
+      --color-secondary: #4b5563;
+      --color-text-main: #111827;
+      --color-text-muted: #6b7280;
+      --color-text-light: #9ca3af;
+      --color-bg-body: #f8fafc;
+      --color-bg-card: #ffffff;
+      --color-border: #e5e7eb;
+      --color-border-dark: #d1d5db;
+      --color-accent-gold: #f59e0b;
+      --color-accent-green: #10b981;
+      --color-accent-red: #ef4444;
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+      --max-width-container: 1240px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); color: var(--color-text-main); background: var(--color-bg-body); line-height: 1.5; }
+    a { color: inherit; text-decoration: none; cursor: pointer; }
+    button { font-family: inherit; cursor: pointer; border: none; background: transparent; outline: none; }
+    input, textarea, select { font-family: inherit; color: inherit; outline: none; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    .app-root-layout { display: flex; flex-direction: column; min-height: 100vh; }
+    .app-main-content { flex: 1; }
+    .section-content-wrapper { max-width: var(--max-width-container); margin: 0 auto; padding: 2.5rem 1.25rem; }
+
+    /* Buttons */
+    .primary-btn, .primary-dark-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--color-primary); color: #fff; font-weight: 700; font-size: 0.95rem; padding: 0.75rem 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--color-primary); transition: 0.2s; }
+    .primary-btn:hover, .primary-dark-btn:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+    .secondary-btn, .secondary-outline-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: #fff; color: var(--color-primary); border: 1px solid var(--color-border-dark); font-weight: 600; font-size: 0.95rem; padding: 0.75rem 1.5rem; border-radius: var(--radius-sm); }
+    .secondary-btn:hover, .secondary-outline-btn:hover { background: var(--color-primary-light); }
+    .full-width { width: 100%; }
+    .text-red { color: var(--color-accent-red) !important; }
+    .mt-4 { margin-top: 1rem; }
+    .ml-auto { margin-left: auto; }
+
+    /* Form Fields */
+    .form-group-field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; text-align: left; }
+    .form-group-field label { font-size: 0.85rem; font-weight: 600; color: var(--color-text-main); }
+    .form-group-field input, .form-group-field textarea, .form-group-field select { width: 100%; padding: 0.75rem 0.9rem; font-size: 0.95rem; border: 1px solid var(--color-border-dark); border-radius: var(--radius-sm); background: #fff; transition: 0.15s; }
+    .form-group-field input:focus, .form-group-field select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(17,24,39,0.08); }
+    .form-row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row-3col { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; }
+
+    /* Navbar */
+    .navbar-header { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid var(--color-border); box-shadow: var(--shadow-sm); }
+    .navbar-container { max-width: var(--max-width-container); margin: 0 auto; padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .navbar-left { display: flex; align-items: center; gap: 1.5rem; }
+    .navbar-logo { display: flex; align-items: center; gap: 0.4rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.35rem; color: var(--color-primary); cursor: pointer; }
+    .desktop-nav-links { display: flex; align-items: center; gap: 1.25rem; }
+    .nav-link { font-size: 0.92rem; font-weight: 500; color: var(--color-secondary); padding: 0.35rem 0.2rem; cursor: pointer; }
+    .nav-link:hover, .nav-link.active { color: var(--color-primary); font-weight: 700; }
+    .hot-pill { background: var(--color-accent-red); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 4px; }
+    .navbar-center { flex: 1; max-width: 440px; }
+    .navbar-search-form { display: flex; align-items: center; background: #f3f4f6; border: 1px solid var(--color-border); border-radius: var(--radius-full); padding: 0.2rem 0.35rem 0.2rem 0.75rem; }
+    .navbar-search-input { flex: 1; border: none; background: transparent; font-size: 0.88rem; padding: 0.35rem 0; }
+    .search-action-btn { background: var(--color-primary); color: #fff; font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: var(--radius-full); }
+    .navbar-right { display: flex; align-items: center; gap: 0.85rem; position: relative; }
+    .navbar-icon-btn { position: relative; display: flex; align-items: center; justify-content: center; padding: 0.5rem; color: var(--color-primary); border-radius: 50%; font-size: 1.1rem; }
+    .icon-badge { position: absolute; top: 0; right: 0; background: var(--color-primary); color: #fff; font-size: 0.68rem; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+    
+    .user-profile-toggle { display: flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.6rem; border-radius: var(--radius-full); background: #f3f4f6; border: 1px solid var(--color-border); font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+    .nav-login-btn { display: flex; align-items: center; gap: 0.4rem; font-weight: 700; font-size: 0.88rem; padding: 0.45rem 1rem; border-radius: var(--radius-sm); background: var(--color-primary); color: #ffffff; }
+
+    /* Figma User Profile Dropdown Card */
+    .user-dropdown-card { position: absolute; top: calc(100% + 8px); right: 0; width: 260px; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-xl); padding: 0.85rem; z-index: 150; text-align: left; }
+    .user-card-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.65rem; }
+    .user-avatar-large { width: 38px; height: 38px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .user-full-name { font-weight: 700; font-size: 0.92rem; color: var(--color-primary); }
+    .user-email-text { font-size: 0.78rem; color: var(--color-text-muted); }
+    .dropdown-divider { height: 1px; background: var(--color-border); margin: 0.5rem -0.85rem; }
+    .dropdown-item { width: 100%; display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.65rem; font-size: 0.88rem; color: var(--color-secondary); border-radius: var(--radius-sm); text-align: left; cursor: pointer; }
+    .dropdown-item:hover { background: #f3f4f6; color: var(--color-primary); }
+
+    /* ==========================================================================
+       LOGIN / REGISTER PAGE (MATCHING FIGMA WIREFRAME)
+       ========================================================================== */
+    .login-page-container { max-width: 440px; margin: 3rem auto 5rem; padding: 0 1.25rem; }
+    .login-card-box { background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 2.5rem 2rem; box-shadow: var(--shadow-md); text-align: center; }
+    .login-avatar-circle { width: 64px; height: 64px; border-radius: 50%; background: #f1f5f9; color: var(--color-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; border: 1px solid var(--color-border); font-size: 1.8rem; }
+    .login-heading-title { font-family: var(--font-heading); font-size: 1.65rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.35rem; }
+    .login-sub-text { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem; }
+    .auth-error-banner { background: #fef2f2; border: 1px solid #fecaca; color: var(--color-accent-red); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 600; margin-bottom: 1rem; text-align: left; }
+    .password-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; }
+    .forgot-pwd-link { font-size: 0.78rem; font-weight: 600; color: var(--color-primary); text-decoration: underline; cursor: pointer; }
+    .login-primary-dark-btn { width: 100%; background: var(--color-primary); color: #ffffff; font-family: var(--font-heading); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.05em; padding: 0.85rem; border-radius: var(--radius-sm); margin-top: 0.5rem; transition: 0.15s; }
+    .login-primary-dark-btn:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+    .auth-separator-divider { position: relative; text-align: center; margin: 1.5rem 0; }
+    .auth-separator-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--color-border); }
+    .auth-separator-divider span { position: relative; background: #ffffff; padding: 0 0.75rem; font-size: 0.82rem; color: var(--color-text-muted); }
+    .social-login-group { display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.5rem; }
+    .social-auth-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.75rem; border: 1px solid var(--color-border-dark); border-radius: var(--radius-sm); background: #ffffff; font-size: 0.88rem; font-weight: 600; color: var(--color-primary); transition: 0.15s; }
+    .social-auth-btn:hover { background: #f8fafc; border-color: var(--color-primary); }
+    .auth-switch-prompt { font-size: 0.88rem; color: var(--color-secondary); }
+    .switch-mode-link { font-weight: 700; color: var(--color-primary); text-decoration: underline; cursor: pointer; }
+
+    /* Hero Carousel */
+    .hero-carousel-section { max-width: var(--max-width-container); margin: 1.5rem auto 0; padding: 0 1.25rem; }
+    .hero-slide-container { position: relative; min-height: 380px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 3rem 4rem; overflow: hidden; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
+    .hero-tagline-pill { display: inline-block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; background: rgba(255,255,255,0.85); padding: 0.25rem 0.85rem; border-radius: var(--radius-full); margin-bottom: 0.85rem; border: 1px solid var(--color-border); }
+    .hero-main-title { font-family: var(--font-heading); font-size: 2.75rem; font-weight: 800; color: var(--color-primary); line-height: 1.15; margin-bottom: 1rem; }
+    .hero-subtitle-text { font-size: 1.05rem; color: var(--color-secondary); line-height: 1.6; margin-bottom: 1.75rem; max-width: 480px; }
+    .hero-cta-btn { display: inline-flex; align-items: center; justify-content: center; background: var(--color-primary); color: #fff; font-family: var(--font-heading); font-weight: 700; font-size: 0.95rem; padding: 0.9rem 2.2rem; border-radius: var(--radius-sm); box-shadow: var(--shadow-md); }
+    .hero-image-frame { width: 320px; height: 320px; border-radius: var(--radius-md); overflow: hidden; border: 4px solid #fff; box-shadow: var(--shadow-lg); }
+    .hero-featured-image { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Trust Badges */
+    .trust-badges-section { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.5rem 2rem; box-shadow: var(--shadow-sm); }
+    .trust-badges-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .trust-badge-item { display: flex; align-items: center; gap: 1rem; }
+    .trust-icon-box { width: 44px; height: 44px; border-radius: var(--radius-md); background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .trust-title { font-weight: 700; font-size: 0.95rem; }
+    .trust-desc { font-size: 0.8rem; color: var(--color-text-muted); }
+
+    /* Categories Grid */
+    .section-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .section-title-heading { font-family: var(--font-heading); font-size: 1.65rem; font-weight: 800; color: var(--color-primary); }
+    .view-all-link { font-size: 0.9rem; font-weight: 700; color: var(--color-primary); cursor: pointer; }
+    .categories-cards-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.25rem; }
+    .category-card-item { border-radius: var(--radius-md); overflow: hidden; background: #fff; border: 1px solid var(--color-border); box-shadow: var(--shadow-sm); cursor: pointer; transition: 0.2s; }
+    .category-card-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--color-primary); }
+    .category-image-container { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; }
+    .category-image { width: 100%; height: 100%; object-fit: cover; }
+    .category-card-caption { padding: 0.85rem; text-align: center; }
+    .category-title { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
+    .category-count-badge { font-size: 0.78rem; color: var(--color-text-muted); }
+
+    /* Product Cards */
+    .products-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+    .product-card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; transition: 0.2s; }
+    .product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .product-card-image-wrapper { position: relative; width: 100%; aspect-ratio: 1/1; background: #f1f5f9; overflow: hidden; cursor: pointer; }
+    .product-card-image { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+    .product-card:hover .product-card-image { transform: scale(1.05); }
+    .product-wishlist-btn { position: absolute; top: 0.65rem; right: 0.65rem; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); font-size: 1rem; }
+    .product-discount-tag { position: absolute; top: 0.65rem; left: 0.65rem; background: var(--color-primary); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; }
+    .product-card-info { padding: 1rem; display: flex; flex-direction: column; flex: 1; }
+    .product-card-category-brand { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 0.35rem; }
+    .product-card-title { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; cursor: pointer; }
+    .product-card-rating { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.85rem; font-size: 0.85rem; color: var(--color-accent-gold); }
+    .product-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 0.75rem; border-top: 1px solid #f1f5f9; }
+    .current-price { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--color-primary); }
+    .original-price { font-size: 0.85rem; color: var(--color-text-light); text-decoration: line-through; margin-left: 0.35rem; }
+    .card-add-btn { background: var(--color-primary); color: #fff; font-size: 0.82rem; font-weight: 700; padding: 0.45rem 0.85rem; border-radius: var(--radius-sm); }
+    .card-add-btn.added { background: var(--color-accent-green); }
+
+    /* Testimonials */
+    .testimonials-section { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2rem; box-shadow: var(--shadow-sm); }
+    .section-header-center { text-align: center; max-width: 600px; margin: 0 auto 2.5rem; }
+    .section-sub-tag { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; color: var(--color-text-muted); text-transform: uppercase; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .testimonial-card { background: #f8fafc; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.5rem; }
+    .testimonial-header { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem; }
+    .testimonial-avatar-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+    .testimonial-comment-text { font-size: 0.9rem; color: var(--color-secondary); font-style: italic; margin-bottom: 1rem; }
+
+    /* Booking Widget */
+    .booking-card-wrapper { max-width: 500px; margin: 0 auto; }
+    .booking-card-box { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); }
+    .calendar-days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 1rem 0; text-align: center; }
+    .calendar-day { height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; border-radius: 4px; cursor: pointer; }
+    .calendar-day.selected { background: var(--color-primary); color: #fff; }
+    .time-slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 1rem 0 1.5rem; }
+    .time-slot-btn { padding: 0.6rem; border: 1px solid var(--color-border); border-radius: 4px; font-weight: 600; font-size: 0.82rem; background: #fff; }
+    .time-slot-btn.active { background: var(--color-primary); color: #fff; }
+
+    /* Cart & Checkout */
+    .cart-layout-grid, .checkout-content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 2.5rem; }
+    .cart-items-card, .price-details-card, .checkout-card-box, .order-summary-card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm); }
+    .cart-item-row { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 0; border-bottom: 1px solid #f1f5f9; }
+    .cart-item-thumbnail { width: 80px; height: 80px; border-radius: var(--radius-sm); object-fit: cover; }
+    .quantity-stepper { display: inline-flex; align-items: center; border: 1px solid var(--color-border-dark); border-radius: var(--radius-sm); }
+    .qty-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .qty-value { min-width: 32px; text-align: center; font-weight: 700; }
+    .price-breakdown-list { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0; }
+    .price-line-row { display: flex; justify-content: space-between; font-size: 0.95rem; }
+    .proceed-checkout-btn, .checkout-action-dark-btn { width: 100%; background: var(--color-primary); color: #fff; font-family: var(--font-heading); font-weight: 800; padding: 0.95rem; border-radius: var(--radius-sm); margin-top: 1rem; }
+
+    /* Printable Receipt */
+    .printable-receipt-card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-md); margin-bottom: 2rem; }
+    .receipt-header-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    .receipt-meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+    .receipt-products-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    .receipt-products-table th, .receipt-products-table td { padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--color-border); text-align: left; }
+
+    /* Footer */
+    .site-footer { background: #fff; border-top: 1px solid var(--color-border); margin-top: 4rem; padding: 3rem 1.25rem 1.5rem; }
+    .footer-top-container { max-width: var(--max-width-container); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 2.5rem; }
+
+    @media (max-width: 768px) {
+      .desktop-nav-links, .navbar-center { display: none; }
+      .hero-slide-container { flex-direction: column; padding: 2rem 1.5rem; text-align: center; }
+      .categories-cards-grid, .trust-badges-grid, .catalog-products-grid { grid-template-columns: 1fr 1fr; }
+      .cart-layout-grid, .checkout-content-grid { grid-template-columns: 1fr; }
+      .receipt-meta-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const PRODUCTS = [
+      {
+        id: 'prod-1',
+        name: 'Casual Cotton Shirt',
+        category: 'men',
+        price: 29.99,
+        originalPrice: 39.99,
+        rating: 4.5,
+        reviewsCount: 98,
+        image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80',
+        shortDescription: '100% premium cotton fabric shirt with tailored regular fit and button-down collar.'
+      },
+      {
+        id: 'prod-2',
+        name: 'Running Shoes',
+        category: 'footwear',
+        price: 59.99,
+        originalPrice: 79.99,
+        rating: 4.8,
+        reviewsCount: 142,
+        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80',
+        shortDescription: 'Ultralight performance running shoes with responsive foam cushioning.'
+      },
+      {
+        id: 'prod-3',
+        name: 'Classic Slim Fit Denim',
+        category: 'men',
+        price: 49.99,
+        originalPrice: 65.00,
+        rating: 4.6,
+        reviewsCount: 84,
+        image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80',
+        shortDescription: 'Modern stretch denim crafted for all-day comfort and natural movement.'
+      },
+      {
+        id: 'prod-4',
+        name: 'Minimalist Leather Watch',
+        category: 'watches',
+        price: 89.99,
+        originalPrice: 120.00,
+        rating: 4.9,
+        reviewsCount: 116,
+        image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=600&q=80',
+        shortDescription: 'Japanese quartz movement watch with matte dial and genuine leather strap.'
+      },
+      {
+        id: 'prod-5',
+        name: 'Urban Canvas Backpack',
+        category: 'bags',
+        price: 45.00,
+        originalPrice: 60.00,
+        rating: 4.7,
+        reviewsCount: 65,
+        image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80',
+        shortDescription: 'Waxed canvas backpack with padded 16" laptop sleeve and waterproof base.'
+      },
+      {
+        id: 'prod-6',
+        name: 'Wireless ANC Headphones',
+        category: 'electronics',
+        price: 99.99,
+        originalPrice: 149.99,
+        rating: 4.8,
+        reviewsCount: 180,
+        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80',
+        shortDescription: 'Studio over-ear headphones with active noise cancellation and 40h battery.'
+      }
+    ];
+
+    const CATEGORIES = [
+      { name: 'Men', slug: 'men', count: 38, image: 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=400&q=80' },
+      { name: 'Women', slug: 'women', count: 46, image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80' },
+      { name: 'Footwear', slug: 'footwear', count: 24, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80' },
+      { name: 'Bags', slug: 'bags', count: 19, image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=400&q=80' },
+      { name: 'Watches', slug: 'watches', count: 15, image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=400&q=80' }
+    ];
+
+    function App() {
+      const [currentView, setCurrentView] = useState('home'); // 'home' | 'shop' | 'cart' | 'checkout' | 'receipt' | 'login'
+      
+      // User session state
+      const [user, setUser] = useState(() => {
+        try {
+          const saved = localStorage.getItem('ecommerce_user');
+          return saved ? JSON.parse(saved) : null;
+        } catch(e) { return null; }
+      });
+
+      const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+      const [selectedCategory, setSelectedCategory] = useState('all');
+      const [searchQuery, setSearchQuery] = useState('');
+
+      // Login/Register Form State
+      const [isRegisterMode, setIsRegisterMode] = useState(false);
+      const [authEmail, setAuthEmail] = useState('');
+      const [authPassword, setAuthPassword] = useState('');
+      const [authName, setAuthName] = useState('');
+      const [authError, setAuthError] = useState('');
+      const [forgotModal, setForgotModal] = useState(false);
+      const [forgotSuccess, setForgotSuccess] = useState(false);
+
+      // Cart State matching Figma wireframe numbers: $89.98 subtotal, $5.40 tax, $95.38 total
+      const [cart, setCart] = useState([
+        { id: 'c1', name: 'Casual Cotton Shirt', price: 29.99, size: 'M', color: 'Olive Green', quantity: 1, image: PRODUCTS[0].image },
+        { id: 'c2', name: 'Running Shoes', price: 59.99, size: '9', color: 'Black', quantity: 1, image: PRODUCTS[1].image }
+      ]);
+      const [lastOrder, setLastOrder] = useState(null);
+      const [selectedDate, setSelectedDate] = useState(12);
+      const [selectedSlot, setSelectedSlot] = useState('10:00 AM');
+      const [bookingConfirmed, setBookingConfirmed] = useState(false);
+
+      useEffect(() => {
+        if (user) {
+          localStorage.setItem('ecommerce_user', JSON.stringify(user));
+        } else {
+          localStorage.removeItem('ecommerce_user');
+        }
+      }, [user]);
+
+      // Calculations
+      const subtotal = cart.reduce((acc, it) => acc + it.price * it.quantity, 0);
+      const tax = Number((subtotal * 0.06).toFixed(2));
+      const shipping = subtotal >= 50 || subtotal === 0 ? 0 : 5.00;
+      const total = Number((subtotal + tax + shipping).toFixed(2));
+
+      const addToCart = (product) => {
+        setCart(prev => {
+          const idx = prev.findIndex(item => item.name === product.name);
+          if (idx > -1) {
+            const updated = [...prev];
+            updated[idx].quantity += 1;
+            return updated;
+          }
+          return [...prev, { id: 'c' + Date.now(), name: product.name, price: product.price, size: 'M', color: 'Standard', quantity: 1, image: product.image }];
+        });
+      };
+
+      const updateQty = (id, delta) => {
+        setCart(prev => prev.map(it => it.id === id ? { ...it, quantity: Math.max(1, it.quantity + delta) } : it));
+      };
+
+      const removeCartItem = (id) => {
+        setCart(prev => prev.filter(it => it.id !== id));
+      };
+
+      const handleAuthSubmit = (e) => {
+        e.preventDefault();
+        setAuthError('');
+
+        if (!authEmail.trim() || !authPassword.trim()) {
+          setAuthError('Please fill in both email/phone and password.');
+          return;
+        }
+
+        if (authPassword.length < 4) {
+          setAuthError('Password must be at least 4 characters.');
+          return;
+        }
+
+        const newUser = {
+          name: isRegisterMode && authName.trim() ? authName.trim() : (authEmail.includes('@') ? authEmail.split('@')[0] : 'Customer'),
+          email: authEmail.includes('@') ? authEmail : 'user@gmail.com',
+          phone: !authEmail.includes('@') ? authEmail : '+1 (555) 234-5678',
+          isLoggedIn: true
+        };
+
+        setUser(newUser);
+        setAuthEmail('');
+        setAuthPassword('');
+        setAuthName('');
+        setCurrentView('home');
+      };
+
+      const handleSocialLogin = (provider) => {
+        const newUser = {
+          name: provider === 'Google' ? 'Google User' : 'Facebook User',
+          email: provider.toLowerCase() + '.user@gmail.com',
+          phone: '+1 (555) 234-5678',
+          isLoggedIn: true
+        };
+        setUser(newUser);
+        setCurrentView('home');
+      };
+
+      const handleLogout = () => {
+        setUser(null);
+        setIsUserMenuOpen(false);
+        setCurrentView('login');
+      };
+
+      const handlePlaceOrder = (shippingData) => {
+        const orderId = 'ORD-2026-' + Math.floor(10000 + Math.random() * 90000);
+        const order = {
+          id: orderId,
+          date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ', 10:30 AM',
+          customer: shippingData || { fullName: user ? user.name : 'Alex Johnson', phone: '+1 (555) 234-5678', email: user ? user.email : 'user@gmail.com', address: '742 Evergreen Terrace, Springfield, CA 97477' },
+          items: [...cart],
+          pricing: { subtotal, tax, shipping, total }
+        };
+        setLastOrder(order);
+        setCart([]);
+        setCurrentView('receipt');
+      };
+
+      return (
+        <div className="app-root-layout">
+          {/* Top Header / Navigation Bar */}
+          <header className="navbar-header">
+            <div className="navbar-container">
+              <div className="navbar-left">
+                <a className="navbar-logo" onClick={() => setCurrentView('home')}>
+                  <span>✦</span>
+                  <span>VELOUR</span>
+                </a>
+                <nav className="desktop-nav-links">
+                  <a className={`nav-link ${currentView === 'home' ? 'active' : ''}`} onClick={() => setCurrentView('home')}>Home</a>
+                  <a className={`nav-link ${currentView === 'shop' ? 'active' : ''}`} onClick={() => { setSelectedCategory('all'); setCurrentView('shop'); }}>Shop</a>
+                  <a className="nav-link" onClick={() => { setSelectedCategory('men'); setCurrentView('shop'); }}>Men</a>
+                  <a className="nav-link" onClick={() => { setSelectedCategory('footwear'); setCurrentView('shop'); }}>Footwear</a>
+                  <a className="nav-link" onClick={() => { setSelectedCategory('all'); setCurrentView('shop'); }}>
+                    Deals <span className="hot-pill">HOT</span>
+                  </a>
+                </nav>
+              </div>
+
+              <div className="navbar-center">
+                <form className="navbar-search-form" onSubmit={(e) => { e.preventDefault(); setCurrentView('shop'); }}>
+                  <input
+                    type="text"
+                    placeholder="Search products, categories..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="navbar-search-input"
+                  />
+                  <button type="submit" className="search-action-btn">Search</button>
+                </form>
+              </div>
+
+              <div className="navbar-right">
+                <button className="navbar-icon-btn" onClick={() => setCurrentView('cart')} title="Shopping Cart">
+                  🛒
+                  {cart.length > 0 && <span className="icon-badge">{cart.reduce((a, b) => a + b.quantity, 0)}</span>}
+                </button>
+
+                {/* User Auth Control */}
+                {user ? (
+                  <div style={{position: 'relative'}}>
+                    <div className="user-profile-toggle" onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}>
+                      <span>👤</span>
+                      <span>{user.name.split(' ')[0]}</span>
+                      <span>▾</span>
+                    </div>
+
+                    {/* Figma User Profile Dropdown */}
+                    {isUserMenuOpen && (
+                      <div className="user-dropdown-card">
+                        <div className="user-card-header">
+                          <div className="user-avatar-large">👤</div>
+                          <div>
+                            <div className="user-full-name">{user.name}</div>
+                            <div className="user-email-text">{user.email}</div>
+                          </div>
+                        </div>
+                        <div className="dropdown-divider"></div>
+                        <ul>
+                          <li className="dropdown-item" onClick={() => { setIsUserMenuOpen(false); setCurrentView('cart'); }}>📦 My Orders</li>
+                          <li className="dropdown-item" onClick={() => { setIsUserMenuOpen(false); setCurrentView('shop'); }}>❤️ Wishlist</li>
+                          <li className="dropdown-item" onClick={() => { setIsUserMenuOpen(false); setCurrentView('checkout'); }}>📍 Addresses</li>
+                          <li className="dropdown-item" onClick={() => { setIsUserMenuOpen(false); alert('Account settings verified.'); }}>⚙️ Account Settings</li>
+                        </ul>
+                        <div className="dropdown-divider"></div>
+                        <button className="dropdown-item text-red" onClick={handleLogout}>
+                          🚪 Logout
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <button className="nav-login-btn" onClick={() => setCurrentView('login')}>
+                    <span>👤</span>
+                    <span>LOGIN</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </header>
+
+          {/* Router Content */}
+          <main className="app-main-content">
+            {/* ==========================================================
+                VIEW 1: LOGIN / REGISTER (MATCHES FIGMA DESIGN)
+               ========================================================== */}
+            {currentView === 'login' && (
+              <div className="login-page-container">
+                <div className="login-card-box">
+                  <div className="login-avatar-circle">👤</div>
+
+                  <h2 className="login-heading-title">
+                    {isRegisterMode ? 'Create an Account' : 'LOGIN / REGISTER'}
+                  </h2>
+                  <p className="login-sub-text">
+                    {isRegisterMode ? 'Enter your details to create your account.' : 'Sign in to access your orders and saved cart.'}
+                  </p>
+
+                  {authError && (
+                    <div className="auth-error-banner">
+                      ⚠️ {authError}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleAuthSubmit}>
+                    {isRegisterMode && (
+                      <div className="form-group-field">
+                        <label>Full Name</label>
+                        <input
+                          type="text"
+                          placeholder="Enter your full name"
+                          value={authName}
+                          onChange={(e) => setAuthName(e.target.value)}
+                          required
+                        />
+                      </div>
+                    )}
+
+                    <div className="form-group-field">
+                      <label>Email / Phone</label>
+                      <input
+                        type="text"
+                        placeholder="Email / Phone"
+                        value={authEmail}
+                        onChange={(e) => setAuthEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group-field">
+                      <div className="password-label-row">
+                        <label>Password</label>
+                        {!isRegisterMode && (
+                          <span className="forgot-pwd-link" onClick={() => setForgotModal(true)}>
+                            Forgot Password?
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="password"
+                        placeholder="Password"
+                        value={authPassword}
+                        onChange={(e) => setAuthPassword(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <button type="submit" className="login-primary-dark-btn">
+                      {isRegisterMode ? 'SIGN UP' : 'LOGIN'}
+                    </button>
+
+                    <div className="auth-separator-divider">
+                      <span>or</span>
+                    </div>
+
+                    {/* Social Login Buttons */}
+                    <div className="social-login-group">
+                      <button
+                        type="button"
+                        className="social-auth-btn"
+                        onClick={() => handleSocialLogin('Google')}
+                      >
+                        <span style={{fontWeight: 800, color: '#4285F4'}}>G</span>
+                        <span>Login with Google</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className="social-auth-btn"
+                        onClick={() => handleSocialLogin('Facebook')}
+                      >
+                        <span style={{fontWeight: 800, color: '#1877F2'}}>f</span>
+                        <span>Login with Facebook</span>
+                      </button>
+                    </div>
+
+                    {/* Switch Mode Prompt */}
+                    <div className="auth-switch-prompt">
+                      {isRegisterMode ? (
+                        <p>
+                          Already have an account?{' '}
+                          <span className="switch-mode-link" onClick={() => { setIsRegisterMode(false); setAuthError(''); }}>
+                            Login
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          Don't have an account?{' '}
+                          <span className="switch-mode-link" onClick={() => { setIsRegisterMode(true); setAuthError(''); }}>
+                            Sign Up
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </form>
+                </div>
+
+                {/* Forgot Password Modal */}
+                {forgotModal && (
+                  <div style={{position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200}}>
+                    <div style={{background: '#fff', padding: '2rem', borderRadius: '12px', maxWidth: '400px', width: '90%', textAlign: 'center'}}>
+                      <h3>Reset Password</h3>
+                      {forgotSuccess ? (
+                        <p style={{color: '#10b981', marginTop: '1rem', fontWeight: 600}}>
+                          ✓ Password reset link has been dispatched to your email!
+                        </p>
+                      ) : (
+                        <div>
+                          <p style={{fontSize: '0.85rem', color: '#6b7280', margin: '0.75rem 0 1rem'}}>Enter your email address to receive password recovery instructions.</p>
+                          <input type="email" placeholder="user@gmail.com" defaultValue="user@gmail.com" style={{width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '6px', marginBottom: '1rem'}} />
+                          <button className="primary-btn full-width" onClick={() => setForgotSuccess(true)}>Send Reset Link</button>
+                        </div>
+                      )}
+                      <button className="secondary-btn full-width mt-4" onClick={() => { setForgotModal(false); setForgotSuccess(false); }}>Close</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ==========================================================
+                VIEW 2: HOME
+               ========================================================== */}
+            {currentView === 'home' && (
+              <div>
+                <section className="hero-carousel-section">
+                  <div className="hero-slide-container">
+                    <div className="hero-content">
+                      <span className="hero-tagline-pill">New Arrivals</span>
+                      <h1 className="hero-main-title">Summer Collection</h1>
+                      <p className="hero-subtitle-text">Discover breathable fabrics, modern silhouettes, and effortless everyday essentials.</p>
+                      <button className="hero-cta-btn" onClick={() => setCurrentView('shop')}>SHOP NOW</button>
+                    </div>
+                    <div className="hero-visual">
+                      <div className="hero-image-frame">
+                        <img src={PRODUCTS[0].image} alt="Hero" className="hero-featured-image" />
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <div className="section-content-wrapper">
+                  <div className="trust-badges-section">
+                    <div className="trust-badges-grid">
+                      <div className="trust-badge-item">
+                        <div className="trust-icon-box">🚚</div>
+                        <div><h4 className="trust-title">Free Shipping</h4><p className="trust-desc">On orders over $50</p></div>
+                      </div>
+                      <div className="trust-badge-item">
+                        <div className="trust-icon-box">🔄</div>
+                        <div><h4 className="trust-title">Easy Returns</h4><p className="trust-desc">30-day money back</p></div>
+                      </div>
+                      <div className="trust-badge-item">
+                        <div className="trust-icon-box">🔒</div>
+                        <div><h4 className="trust-title">Secure Payment</h4><p className="trust-desc">100% encrypted</p></div>
+                      </div>
+                      <div className="trust-badge-item">
+                        <div className="trust-icon-box">💬</div>
+                        <div><h4 className="trust-title">24/7 Support</h4><p className="trust-desc">Dedicated assistance</p></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="section-content-wrapper">
+                  <div className="section-header-row">
+                    <h2 className="section-title-heading">Top Categories</h2>
+                    <span className="view-all-link" onClick={() => setCurrentView('shop')}>View All →</span>
+                  </div>
+                  <div className="categories-cards-grid">
+                    {CATEGORIES.map(cat => (
+                      <div key={cat.slug} className="category-card-item" onClick={() => { setSelectedCategory(cat.slug); setCurrentView('shop'); }}>
+                        <div className="category-image-container">
+                          <img src={cat.image} alt={cat.name} className="category-image" />
+                        </div>
+                        <div className="category-card-caption">
+                          <h3 className="category-title">{cat.name}</h3>
+                          <span className="category-count-badge">{cat.count}+ items</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="section-content-wrapper">
+                  <div className="section-header-row">
+                    <h2 className="section-title-heading">Best Selling Products</h2>
+                    <span className="view-all-link" onClick={() => setCurrentView('shop')}>View All →</span>
+                  </div>
+                  <div className="products-grid-layout">
+                    {PRODUCTS.map(prod => (
+                      <div key={prod.id} className="product-card">
+                        <div className="product-card-image-wrapper" onClick={() => setCurrentView('shop')}>
+                          <img src={prod.image} alt={prod.name} className="product-card-image" />
+                          <button className="product-wishlist-btn">❤️</button>
+                        </div>
+                        <div className="product-card-info">
+                          <span className="product-card-category-brand">{prod.category}</span>
+                          <h3 className="product-card-title">{prod.name}</h3>
+                          <div className="product-card-rating">
+                            ★★★★☆ <span>({prod.reviewsCount})</span>
+                          </div>
+                          <div className="product-card-footer">
+                            <div>
+                              <span className="current-price">${prod.price.toFixed(2)}</span>
+                              <span className="original-price">${prod.originalPrice.toFixed(2)}</span>
+                            </div>
+                            <button className="card-add-btn" onClick={() => addToCart(prod)}>Add to Cart</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="section-content-wrapper">
+                  <div className="testimonials-section">
+                    <div className="section-header-center">
+                      <span className="section-sub-tag">TESTIMONIALS</span>
+                      <h2 className="section-title-heading">What Our Customers Say</h2>
+                    </div>
+                    <div className="testimonials-grid">
+                      <div className="testimonial-card">
+                        <div className="testimonial-header">
+                          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" className="testimonial-avatar-img" />
+                          <div><strong>Sarah Jenkins</strong><div style={{color: '#f59e0b'}}>★★★★★</div></div>
+                        </div>
+                        <p className="testimonial-comment-text">"The casual cotton shirt fits like a dream! Ultra soft, breathable and holds up nicely after washing."</p>
+                      </div>
+                      <div className="testimonial-card">
+                        <div className="testimonial-header">
+                          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" className="testimonial-avatar-img" />
+                          <div><strong>David Miller</strong><div style={{color: '#f59e0b'}}>★★★★★</div></div>
+                        </div>
+                        <p className="testimonial-comment-text">"Exceptional quality on the Running Shoes. Plenty of arch support and looks great with jeans."</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="section-content-wrapper">
+                  <div className="booking-card-wrapper">
+                    <div className="booking-card-box">
+                      <h3 style={{textAlign: 'center', marginBottom: '1rem'}}>Select Date & Time for Styling Consultation</h3>
+                      <div className="calendar-days-grid">
+                        {[...Array(30)].map((_, i) => (
+                          <div key={i} className={`calendar-day ${selectedDate === (i+1) ? 'selected' : ''}`} onClick={() => setSelectedDate(i+1)}>
+                            {i+1}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="time-slots-grid">
+                        {['10:00 AM', '11:30 AM', '01:00 PM', '02:30 PM', '04:00 PM', '05:30 PM'].map(time => (
+                          <button key={time} className={`time-slot-btn ${selectedSlot === time ? 'active' : ''}`} onClick={() => setSelectedSlot(time)}>
+                            {time}
+                          </button>
+                        ))}
+                      </div>
+                      <button className="primary-btn full-width" onClick={() => setBookingConfirmed(true)}>
+                        CONFIRM BOOKING
+                      </button>
+                      {bookingConfirmed && (
+                        <p style={{color: '#10b981', textAlign: 'center', marginTop: '0.75rem', fontWeight: 600}}>
+                          ✓ Booking Confirmed for June {selectedDate} at {selectedSlot}!
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ==========================================================
+                VIEW 3: SHOP / CATALOG
+               ========================================================== */}
+            {currentView === 'shop' && (
+              <div className="section-content-wrapper">
+                <div className="section-header-row">
+                  <h2 className="section-title-heading">All Products ({selectedCategory.toUpperCase()})</h2>
+                  <button className="secondary-btn" onClick={() => setSelectedCategory('all')}>Show All</button>
+                </div>
+                <div className="products-grid-layout">
+                  {PRODUCTS.filter(p => (selectedCategory === 'all' || p.category === selectedCategory) && p.name.toLowerCase().includes(searchQuery.toLowerCase())).map(prod => (
+                    <div key={prod.id} className="product-card">
+                      <div className="product-card-image-wrapper">
+                        <img src={prod.image} alt={prod.name} className="product-card-image" />
+                      </div>
+                      <div className="product-card-info">
+                        <span className="product-card-category-brand">{prod.category}</span>
+                        <h3 className="product-card-title">{prod.name}</h3>
+                        <p style={{fontSize: '0.82rem', color: '#6b7280', marginBottom: '0.5rem'}}>{prod.shortDescription}</p>
+                        <div className="product-card-footer">
+                          <span className="current-price">${prod.price.toFixed(2)}</span>
+                          <button className="card-add-btn" onClick={() => addToCart(prod)}>Add to Cart</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ==========================================================
+                VIEW 4: CART
+               ========================================================== */}
+            {currentView === 'cart' && (
+              <div className="section-content-wrapper">
+                <h1 className="section-title-heading" style={{marginBottom: '1.5rem'}}>Your Cart ({cart.length} Items)</h1>
+                {cart.length === 0 ? (
+                  <div style={{background: '#fff', padding: '3rem', textAlign: 'center', borderRadius: '12px'}}>
+                    <h3>Your Cart is Empty</h3>
+                    <button className="primary-btn mt-4" onClick={() => setCurrentView('shop')}>Continue Shopping</button>
+                  </div>
+                ) : (
+                  <div className="cart-layout-grid">
+                    <div className="cart-items-card">
+                      {cart.map(item => (
+                        <div key={item.id} className="cart-item-row">
+                          <img src={item.image} className="cart-item-thumbnail" />
+                          <div style={{flex: 1}}>
+                            <h4 style={{fontWeight: 700}}>{item.name}</h4>
+                            <span style={{fontSize: '0.8rem', color: '#6b7280'}}>Size: {item.size} • Color: {item.color}</span>
+                            <div style={{fontWeight: 700, marginTop: '0.25rem'}}>${item.price.toFixed(2)} each</div>
+                          </div>
+                          <div className="quantity-stepper">
+                            <button className="qty-btn" onClick={() => updateQty(item.id, -1)}>-</button>
+                            <span className="qty-value">{item.quantity}</span>
+                            <button className="qty-btn" onClick={() => updateQty(item.id, 1)}>+</button>
+                          </div>
+                          <button style={{color: '#ef4444', fontWeight: 700, padding: '0.5rem'}} onClick={() => removeCartItem(item.id)}>🗑️</button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="price-details-card">
+                      <h3 style={{marginBottom: '1rem'}}>PRICE DETAILS</h3>
+                      <div className="price-breakdown-list">
+                        <div className="price-line-row"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+                        <div className="price-line-row"><span>Shipping</span><span style={{color: '#10b981'}}>{shipping === 0 ? 'Free' : '$5.00'}</span></div>
+                        <div className="price-line-row"><span>Tax (6%)</span><span>${tax.toFixed(2)}</span></div>
+                        <div className="price-line-row" style={{fontWeight: 800, fontSize: '1.2rem', borderTop: '1px solid #e5e7eb', paddingTop: '0.5rem'}}>
+                          <span>Total</span><span>${total.toFixed(2)}</span>
+                        </div>
+                      </div>
+                      <button className="proceed-checkout-btn" onClick={() => setCurrentView('checkout')}>PROCEED TO CHECKOUT</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ==========================================================
+                VIEW 5: 3-STEP CHECKOUT
+               ========================================================== */}
+            {currentView === 'checkout' && (
+              <div className="section-content-wrapper">
+                <h1 className="section-title-heading" style={{textAlign: 'center', marginBottom: '2rem'}}>Checkout</h1>
+                <div className="checkout-content-grid">
+                  <div className="checkout-card-box">
+                    <h3 style={{marginBottom: '1rem'}}>Shipping Information</h3>
+                    <div className="form-group-field">
+                      <label>Full Name</label>
+                      <input type="text" defaultValue={user ? user.name : "Alex Johnson"} id="ship-name" />
+                    </div>
+                    <div className="form-row-2col">
+                      <div className="form-group-field"><label>Phone</label><input type="text" defaultValue="+1 (555) 234-5678" id="ship-phone" /></div>
+                      <div className="form-group-field"><label>Email</label><input type="text" defaultValue={user ? user.email : "user@gmail.com"} id="ship-email" /></div>
+                    </div>
+                    <div className="form-group-field"><label>Address</label><input type="text" defaultValue="742 Evergreen Terrace" id="ship-addr" /></div>
+                    <div className="form-row-3col">
+                      <div className="form-group-field"><label>City</label><input type="text" defaultValue="Springfield" id="ship-city" /></div>
+                      <div className="form-group-field"><label>State</label><input type="text" defaultValue="CA" id="ship-state" /></div>
+                      <div className="form-group-field"><label>ZIP</label><input type="text" defaultValue="97477" id="ship-zip" /></div>
+                    </div>
+
+                    <h3 style={{marginTop: '1.5rem', marginBottom: '0.75rem'}}>Payment Method</h3>
+                    <div style={{background: '#f8fafc', padding: '1rem', border: '1px solid #111827', borderRadius: '8px'}}>
+                      <strong>💳 Credit / Debit Card (VISA, Mastercard, AMEX, RuPay)</strong>
+                      <div className="form-group-field" style={{marginTop: '0.75rem'}}><label>Card Number</label><input type="text" defaultValue="•••• •••• •••• 4242" /></div>
+                    </div>
+
+                    <button className="checkout-action-dark-btn" onClick={() => handlePlaceOrder({
+                      fullName: document.getElementById('ship-name').value,
+                      phone: document.getElementById('ship-phone').value,
+                      email: document.getElementById('ship-email').value,
+                      address: document.getElementById('ship-addr').value + ', ' + document.getElementById('ship-city').value + ', ' + document.getElementById('ship-state').value + ' ' + document.getElementById('ship-zip').value
+                    })}>
+                      PAY ${total.toFixed(2)} & PLACE ORDER
+                    </button>
+                  </div>
+
+                  <div className="order-summary-card">
+                    <h3 style={{marginBottom: '1rem'}}>Order Summary</h3>
+                    {cart.map(it => (
+                      <div key={it.id} style={{display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem'}}>
+                        <span>{it.name} (x{it.quantity})</span>
+                        <strong>${(it.price * it.quantity).toFixed(2)}</strong>
+                      </div>
+                    ))}
+                    <div style={{borderTop: '1px solid #e5e7eb', paddingTop: '0.75rem', marginTop: '0.75rem', fontWeight: 800, fontSize: '1.15rem', display: 'flex', justifyContent: 'space-between'}}>
+                      <span>Total:</span><span>${total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ==========================================================
+                VIEW 6: ORDER SUCCESS & PRINTABLE RECEIPT
+               ========================================================== */}
+            {currentView === 'receipt' && lastOrder && (
+              <div className="section-content-wrapper" style={{maxWidth: '800px'}}>
+                <div style={{background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '2rem', textAlign: 'center', marginBottom: '1.5rem'}}>
+                  <div style={{fontSize: '3rem', color: '#10b981'}}>✓</div>
+                  <h1 style={{fontFamily: 'var(--font-heading)', fontWeight: 800}}>Thank you!</h1>
+                  <p style={{color: '#6b7280'}}>Your order has been placed successfully.</p>
+                  <button className="primary-btn mt-4" onClick={() => window.print()}>🖨️ Print Receipt</button>
+                </div>
+
+                <div className="printable-receipt-card" id="printable-receipt">
+                  <div className="receipt-header-row">
+                    <div><h2>✦ VELOUR</h2><span>Tax Invoice & Order Receipt</span></div>
+                    <div style={{textAlign: 'right'}}><strong>{lastOrder.id}</strong><div>{lastOrder.date}</div></div>
+                  </div>
+                  <div className="receipt-meta-grid">
+                    <div><span style={{fontSize: '0.75rem', color: '#6b7280'}}>CUSTOMER</span><div><strong>{lastOrder.customer.fullName}</strong></div><div>{lastOrder.customer.email}</div></div>
+                    <div><span style={{fontSize: '0.75rem', color: '#6b7280'}}>SHIPPING ADDRESS</span><div>{lastOrder.customer.address}</div></div>
+                    <div><span style={{fontSize: '0.75rem', color: '#6b7280'}}>PAYMENT</span><div>Credit Card (•••• 4242)</div><span style={{color: '#10b981', fontWeight: 700}}>✓ Paid</span></div>
+                  </div>
+                  <table className="receipt-products-table">
+                    <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+                    <tbody>
+                      {lastOrder.items.map(it => (
+                        <tr key={it.id}><td>{it.name}</td><td>{it.quantity}</td><td>${it.price.toFixed(2)}</td><td><strong>${(it.price * it.quantity).toFixed(2)}</strong></td></tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div style={{textAlign: 'right', fontSize: '1.1rem', fontWeight: 800}}>
+                    Total Paid: ${lastOrder.pricing.total.toFixed(2)}
+                  </div>
+                </div>
+                <button className="secondary-btn full-width" onClick={() => setCurrentView('home')}>Back to Home</button>
+              </div>
+            )}
+          </main>
+
+          {/* Footer */}
+          <footer className="site-footer">
+            <div className="footer-top-container">
+              <div><h3>✦ VELOUR</h3><p style={{color: '#6b7280', fontSize: '0.85rem', marginTop: '0.5rem'}}>Curated premium lifestyle, apparel and footwear.</p></div>
+              <div><h4>Shop</h4><p style={{fontSize: '0.85rem', color: '#6b7280'}}>Men<br/>Women<br/>Footwear<br/>Watches</p></div>
+              <div><h4>Customer Care</h4><p style={{fontSize: '0.85rem', color: '#6b7280'}}>Shipping Policy<br/>Returns & Refunds<br/>Track Order</p></div>
+              <div><h4>© {new Date().getFullYear()} VELOUR Store Inc.</h4><p style={{fontSize: '0.78rem', color: '#9ca3af', marginTop: '0.5rem'}}>Manage cookies or opt out</p></div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
